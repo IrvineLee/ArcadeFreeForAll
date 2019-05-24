@@ -40,6 +40,12 @@ public class HighScoreManager : MonoBehaviour
             string name = PlayerPrefs.GetString("Name_" + i);
             string score = PlayerPrefs.GetString("HiScore_" + i);
 
+            if (int.Parse(score) == 0)
+            {
+                name = "Person_" + (i + 1);
+                score = ((m_HiScoreMaxNames - i + 1) * 200).ToString();
+            }
+
             nameText.text = name;
             scoreText.text = GetScoreWithZero(score);
         }
@@ -119,6 +125,7 @@ public class HighScoreManager : MonoBehaviour
             PlayerPrefs.SetString("Name_" + i, currName);
             PlayerPrefs.SetString("HiScore_" + i, currScore);
         }
+        PlayerPrefs.Save();
     }
 
     /// ------------------------------------------------------------------------------------

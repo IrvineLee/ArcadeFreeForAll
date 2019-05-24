@@ -15,4 +15,4 @@ MonoBehaviour:
   prefabList:
   - prefab: {fileID: 1700013120692340581, guid: bbfcc3b108334d444aceeda8524f18e7,
       type: 3}
-    count: 40
+    count: 100

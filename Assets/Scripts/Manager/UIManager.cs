@@ -63,6 +63,8 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.sSingleton.IsBattle()) return;
+
         // Pause menu.
         if (Input.GetKeyDown(KeyCode.Escape)) PauseUnPauseMenu();
     }
@@ -108,10 +110,11 @@ public class UIManager : MonoBehaviour
         m_RoundStart.gameObject.SetActive(true);
         m_ShopParent.gameObject.SetActive(false);
 
+        // Display new round to player.
         int currRound = GameManager.sSingleton.currRound;
         m_RoundStartText.text = "Round " + currRound + " Start !!";
 
-        // Update string to new round.
+        // Update string to new round on the sidebar.
         string str = "";
         if (currRound < 10) str = "Round 0" + currRound.ToString();
         else if (currRound < 100) str = "Round " + currRound.ToString();
@@ -129,7 +132,8 @@ public class UIManager : MonoBehaviour
         m_RoundOver.gameObject.SetActive(true);
         GameManager.sSingleton.currState = GameManager.State.TRANSITION;
         ShopManager.sSingleton.SetupButtons();
-        
+        EnemyManager.sSingleton.ReduceSpawnCD();
+
         StartCoroutine(WaitThenDo(2, SwitchToShop));
     }
 

@@ -13,6 +13,7 @@ public class EnemyManager : MonoBehaviour
     public int startEnemy = 4;
     public int maxIncPerRound = 3;
     public float respawnCD = 1.5f;
+    [SerializeField] float m_MinusRespawnCD = 0.1f;
     #endregion
 
     public EnemyScriptableObject m_EnemyData;
@@ -109,6 +110,12 @@ public class EnemyManager : MonoBehaviour
         }
 
         return mEnemyist[closestIndex];
+    }
+
+    public void ReduceSpawnCD()
+    { 
+        respawnCD -= m_MinusRespawnCD;
+        if (respawnCD < 0) respawnCD = 0;
     }
 
     // ----------------------------------------------------------------------------------------------

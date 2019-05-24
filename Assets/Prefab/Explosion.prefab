@@ -157,3 +157,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   time: 1
+  isDestroy: 0
+  isThisInBattle: 1

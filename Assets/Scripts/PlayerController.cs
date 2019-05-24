@@ -259,6 +259,7 @@ public class PlayerController : MonoBehaviour
                 {
                     // Game over.
                     GameManager.sSingleton.currState = GameManager.State.GAME_OVER;
+                    gameObject.SetActive(false);
                     UIManager.sSingleton.ShowGameOver();
                 }
             }

@@ -19,6 +19,13 @@ public class MainMenuManager : MonoBehaviour
         else _sSingleton = this;
     }
 
+    void Start()
+    {
+        Screen.SetResolution(1920, 1080, true);
+        HighScoreManager.sSingleton.LoadHighScore(m_HighScoreParent);
+        HighScoreManager.sSingleton.SaveHighScore(m_HighScoreParent);
+    }
+
     // Start in game scene.
     public void StartGame()
     {

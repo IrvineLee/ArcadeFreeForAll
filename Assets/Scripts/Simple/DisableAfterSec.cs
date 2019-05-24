@@ -6,6 +6,7 @@ public class DisableAfterSec : MonoBehaviour
 {
     public float time;
     public bool isDestroy = false;
+    public bool isThisInBattle = false;
 
     float mTimer;
 
@@ -16,7 +17,7 @@ public class DisableAfterSec : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.sSingleton.IsBattle()) return;
+        if (isThisInBattle && !GameManager.sSingleton.IsBattle()) return;
 
         if (mTimer > 0)
         {
