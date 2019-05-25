@@ -8,6 +8,27 @@ public class HighScoreManager : MonoBehaviour
     public static HighScoreManager sSingleton { get { return _sSingleton; } }
     static HighScoreManager _sSingleton;
 
+    public class HighScore
+    {
+        public int rank;
+        public string name;
+        public int score;
+
+        public HighScore()
+        {
+            rank = 0;
+            name = "";
+            score = 0;
+        }
+
+        public HighScore(int rank, string name, int score)
+        {
+            this.rank = rank;
+            this.name = name;
+            this.score = score;
+        }
+    }
+
     [SerializeField] int m_HiScoreMaxNames = 5, m_HiScoreMaxDigit = 7;
 
     void Awake()
@@ -29,8 +50,9 @@ public class HighScoreManager : MonoBehaviour
     /// ------------------------------------------------------------------------------------
 
     // Main menu highscore load.
-    public void LoadHighScore(Transform hiScoreParent)
+    public List<HighScore> LoadHighScore(Transform hiScoreParent)
     {
+        List<HighScore> highScoreList = new List<HighScore>();
         for (int i = 0; i < m_HiScoreMaxNames; i++)
         {
             Transform currTrans = hiScoreParent.GetChild(i);
@@ -40,43 +62,34 @@ public class HighScoreManager : MonoBehaviour
             string name = PlayerPrefs.GetString("Name_" + i);
             string score = PlayerPrefs.GetString("HiScore_" + i);
 
-            if (int.Parse(score) == 0)
+            int scoreInt = 0;
+            int.TryParse(score, out scoreInt);
+            if (scoreInt == 0)
             {
                 name = "Person_" + (i + 1);
-                score = ((m_HiScoreMaxNames - i + 1) * 200).ToString();
+                scoreInt = ((m_HiScoreMaxNames - i + 1) * 200);
+                score = scoreInt.ToString();
             }
+
+            highScoreList.Add(new HighScore(i + 1, name, scoreInt));
 
             nameText.text = name;
             scoreText.text = GetScoreWithZero(score);
         }
+
+        return highScoreList;
     }
 
     // Load high score and push it down based on current score. Return the rank.
     public int LoadHighScore(Transform hiScoreParent, int currScore)
     {
-        List<int> scoreList = new List<int>();
-
-        // Load everything accordingly.
-        for (int i = 0; i < m_HiScoreMaxNames; i++)
-        {
-            Transform currTrans = hiScoreParent.GetChild(i);
-            Text nameText = currTrans.GetChild(1).GetComponent<Text>();
-            Text scoreText = currTrans.GetChild(2).GetComponent<Text>();
-
-            string name = PlayerPrefs.GetString("Name_" + i);
-            string score = PlayerPrefs.GetString("HiScore_" + i);
-
-            nameText.text = name;
-            scoreText.text = GetScoreWithZero(score);
-
-            scoreList.Add(int.Parse(score));
-        }
+        List<HighScore> highScoreList = LoadHighScore(hiScoreParent);
 
         // Get the current rank of the player.
         int rank = 0;
-        for (int i = 0; i < scoreList.Count; i++)
+        for (int i = 0; i < highScoreList.Count; i++)
         {
-            if (currScore > scoreList[i])
+            if (currScore > highScoreList[i].score)
             {
                 rank = i + 1;
                 break;
@@ -132,7 +145,7 @@ public class HighScoreManager : MonoBehaviour
     /// -------------------------------- PRIVATE FUNCTIONS ---------------------------------
     /// ------------------------------------------------------------------------------------
 
-    // Main menu highscore save. Inital test.
+    // Main menu highscore save. Initial test.
     //void SaveHighScore(Transform hiScoreParent)
     //{
     //    for (int i = 0; i < m_HiScoreMaxNames; i++)

@@ -266,9 +266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a93e4049971a094fba216434f79400e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 1
-  isDestroy: 0
-  isThisInBattle: 0
+  m_Time: 1
+  m_IsDestroy: 0
+  m_IsThisForBattle: 0
 --- !u!114 &29733780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1155,7 +1155,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.5904e-41, y: 2.8e-44, z: 4.951e-42, w: 6e-44}
+  m_BoundingSphereOverride: {x: 6.79e-42, y: 1.05e-43, z: 5.16e-43, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -6527,7 +6527,7 @@ MonoBehaviour:
   maxShield: 100
   minShieldRechargeTime: 2
   startPosTrans: {fileID: 219319430}
-  m_PlayerController: {fileID: 1854132805}
+  playerController: {fileID: 1854132805}
   currState: 0
   currRound: 1
   coinToScore: 1000
@@ -6560,7 +6560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a1e3999f73c9d4999bec20b461de73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletData: {fileID: 11400000, guid: 0ad24a61eb021e845ac076fe46bac423, type: 2}
+  m_BulletData: {fileID: 11400000, guid: 0ad24a61eb021e845ac076fe46bac423, type: 2}
 --- !u!114 &1310239801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6604,11 +6604,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9390bec4414f9e408bf26766bcea73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifePrice: 50
-  rechargeRocketPrice: 25
-  addRocketsPrice: 25
-  upgrShieldPrice: 15
-  upgrRechargeRatePrice: 15
+  m_LifePrice: 50
+  m_RechargeRocketPrice: 25
+  m_AddRocketsPrice: 25
+  m_UpgrShieldPrice: 15
+  m_UpgrRechargeRatePrice: 15
   m_AddLifeBtn: {fileID: 175560856}
   m_RechargeRocketsBtn: {fileID: 1600131108}
   m_AddMaxRocketsBtn: {fileID: 44039395}
@@ -6628,12 +6628,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c63dbd907f4328a48935ef57c6f9831b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy1StartHealth: 50
-  startEnemy: 4
-  maxIncPerRound: 2
-  respawnCD: 1
-  m_MinusRespawnCD: 0.1
   m_EnemyData: {fileID: 11400000, guid: 461e158fc02dcfb4d9597ed0a85ef98c, type: 2}
+  enemy1StartHealth: 50
+  m_StartEnemy: 4
+  m_MaxIncPerRound: 2
+  m_RespawnCD: 0.8
+  m_CDReducePerRound: 0.1
   m_CurrEnemy: 0
   m_CurrRoundMaxEnemy: 0
 --- !u!114 &1310239804
@@ -9459,9 +9459,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67ad8b3427e478e49ac643eebe10d63a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4.5
-  primaryShootDelay: 0.15
-  rocketyShootDelay: 1
+  m_MoveSpeed: 4.5
+  m_PrimaryShootDelay: 0.15
+  m_RocketyShootDelay: 1
   m_ExplodeTrans: {fileID: 7398749031335132282, guid: 9121484724e77ae40b20bd6ca84292e9,
     type: 3}
   m_CurrLife: 0

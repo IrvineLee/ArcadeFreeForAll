@@ -7,7 +7,8 @@ public class BulletManager : MonoBehaviour
     public static BulletManager sSingleton { get { return _sSingleton; } }
     static BulletManager _sSingleton;
 
-    public BulletsScriptableObject bulletData;
+    [Header("Data")]
+    [SerializeField] BulletsScriptableObject m_BulletData;
 
     // Bullet list.
     List<Transform> mPlayerBulletList = new List<Transform>();
@@ -28,10 +29,9 @@ public class BulletManager : MonoBehaviour
         CacheBullets();
     }
 
-    // Get inactive bullets.
-    public Transform GetPlayerBullet() { return GetBullet(ref mPlayerBulletList, ref mPlayerBulletIndex); }
-    public Transform GetPlayerRocket() { return GetBullet(ref mPlayerRocketList, ref mPlayerRocketIndex); }
-    public Transform GetEnemyBullet() { return GetBullet(ref mEnemyBulletList, ref mEnemyBulletIndex); }
+    /// ---------------------------------------------------------------------------------------------
+    /// --------------------------------- PUBLIC FUNCTIONS ------------------------------------------
+    /// ---------------------------------------------------------------------------------------------
 
     public void DisableAllBullets()
     {
@@ -39,6 +39,19 @@ public class BulletManager : MonoBehaviour
         DisableBullets(ref mPlayerRocketList);
         DisableBullets(ref mEnemyBulletList);
     }
+
+    // ----------------------------------------------------------------------------------------------
+    // --------------------------------------- GETTER -----------------------------------------------
+    // ----------------------------------------------------------------------------------------------
+
+    // Get inactive bullets.
+    public Transform GetPlayerBullet()  { return GetBullet(ref mPlayerBulletList, ref mPlayerBulletIndex); }
+    public Transform GetPlayerRocket()  { return GetBullet(ref mPlayerRocketList, ref mPlayerRocketIndex); }
+    public Transform GetEnemyBullet()   { return GetBullet(ref mEnemyBulletList, ref mEnemyBulletIndex); }
+
+    /// ----------------------------------------------------------------------------------------------
+    /// ---------------------------------- PRIVATE FUNCTIONS -----------------------------------------
+    /// ----------------------------------------------------------------------------------------------
 
     Transform GetBullet(ref List<Transform> bulletList, ref int bulletIndex)
     {
@@ -61,9 +74,9 @@ public class BulletManager : MonoBehaviour
     // Instantiate the bullets at the start of the game.
     void CacheBullets()
     {
-        for (int i = 0; i < bulletData.prefabList.Count; i++)
+        for (int i = 0; i < m_BulletData.prefabList.Count; i++)
         {
-            BulletsScriptableObject.Bullet currBullet = bulletData.prefabList[i];
+            BulletsScriptableObject.Bullet currBullet = m_BulletData.prefabList[i];
 
             if (currBullet.prefab.CompareTag("PlayerBullet")) AddToList(currBullet, ref mPlayerBulletList);
             else if (currBullet.prefab.CompareTag("PlayerRocket")) AddToList(currBullet, ref mPlayerRocketList);

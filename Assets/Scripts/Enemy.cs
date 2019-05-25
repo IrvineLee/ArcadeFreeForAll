@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int enemyIndex;
-    public int damageScore = 100;
-    public int killScore = 500;
+    [ReadOnly] public int enemyID;
+    [SerializeField] int m_DamageScore = 100;
+    [SerializeField] int m_KillScore = 500;
 
-    public float moveSpeed = 1;
-    public float shootTime = 1;
-    public bool isShoot = true;
+    [SerializeField] float m_MoveSpeed = 3;
+    [SerializeField] float m_ShootTime = 1;
+    [SerializeField] bool m_IsShoot = true;
 
-    [ReadOnly][SerializeField]float currHealth;
-    [ReadOnly][SerializeField]Transform target;
+    [ReadOnly][SerializeField]float m_CurrHealth;
 
     PlayerController mPlayerController;
-    PlayerController.Border mBorder = new PlayerController.Border();
+    GameManager.Border mBorder = new GameManager.Border();
 
-    Vector3 mMoveDir;
-    float mTimer;
-    bool mIsDead = false;
+    Vector3 mMoveDir;       // The move direction.
+    float mTimer;           // Count the time to shoot.
+    bool mIsDead = false;   // Check whether it's dead.
 
     void Start()
     {
-        mPlayerController = GameManager.sSingleton.m_PlayerController;
+        mPlayerController = GameManager.sSingleton.playerController;
         mBorder = EnemyManager.sSingleton.GetBorder;
 
-        currHealth = EnemyManager.sSingleton.enemy1StartHealth;
+        // Get the current health and set the move direction.
+        m_CurrHealth = EnemyManager.sSingleton.enemy1StartHealth;
         SetMoveDirection();
     }
 
@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
         // Set new direction after re-enabled.
         if (!mBorder.IsZero())
         {
-            currHealth = EnemyManager.sSingleton.enemy1StartHealth;
+            m_CurrHealth = EnemyManager.sSingleton.enemy1StartHealth;
             SetMoveDirection();
             mIsDead = false;
         }
@@ -47,13 +47,13 @@ public class Enemy : MonoBehaviour
         if (!GameManager.sSingleton.IsBattle()) return;
 
         // Movement.
-        transform.Translate(mMoveDir * moveSpeed * Time.deltaTime, Space.World);
+        transform.Translate(mMoveDir * m_MoveSpeed * Time.deltaTime, Space.World);
 
         // Attack.
-        if (isShoot)
+        if (m_IsShoot)
         {
             mTimer += Time.deltaTime;
-            if (mTimer >= shootTime)
+            if (mTimer >= m_ShootTime)
             {
                 ActivateBullet();
                 mTimer = 0;
@@ -79,6 +79,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBullet") || collision.CompareTag("PlayerRocket") || collision.CompareTag("EnemyBullet"))
         {
+            // Check whether it's the player or another enemy hit it.
             bool isAddToPlayer = collision.CompareTag("EnemyBullet") ? false : true;
 
             GetDamaged(collision.GetComponent<BulletMove>().damage, isAddToPlayer);
@@ -95,6 +96,7 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collision)
     {
+        // To prevent killing the enemy multiple times because of trigger enter and trigger stay.
         if (mIsDead) return;
 
         if (collision.CompareTag("Explosion"))
@@ -103,11 +105,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    /// ----------------------------------------------------------------------------------------------
+    /// ---------------------------------- PRIVATE FUNCTIONS -----------------------------------------
+    /// ----------------------------------------------------------------------------------------------
+
     void SetMoveDirection()
     {
         // Get the direction.
         Vector3 dir1 = mPlayerController.transform.position - transform.position;
-        Vector3 dir2 = EnemyManager.sSingleton.GetNearestEnemy(enemyIndex).position - transform.position;
+        Vector3 dir2 = EnemyManager.sSingleton.GetNearestEnemy(enemyID).position - transform.position;
 
         // Get the distance.
         float dist1 = dir1.sqrMagnitude;
@@ -135,27 +141,30 @@ public class Enemy : MonoBehaviour
 
     void GetDamaged(int dmg, bool isAddToPlayer)
     {
-        currHealth -= dmg;
+        m_CurrHealth -= dmg;
 
-        if (currHealth <= 0)
+        if (m_CurrHealth <= 0)
         {
+            // Disable the enemy.
             mIsDead = true;
             gameObject.SetActive(false);
             EnemyManager.sSingleton.MinusEnemy();
 
+            // Update the score and kill.
             if (isAddToPlayer)
             {
-                mPlayerController.AddScore(killScore);
+                mPlayerController.AddScore(m_KillScore);
                 mPlayerController.AddKill();
             }
 
+            // Drop the coin.
             Transform trans = EnvironmentalObjManager.sSingleton.GetCoin();
             trans.position = transform.position;
             trans.gameObject.SetActive(true);
         }
         else
         {
-            if (isAddToPlayer) mPlayerController.AddScore(damageScore);
+            if (isAddToPlayer) mPlayerController.AddScore(m_DamageScore);
         }
     }
 }

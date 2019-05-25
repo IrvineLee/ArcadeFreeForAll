@@ -7,26 +7,32 @@ public class EnemyManager : MonoBehaviour
     public static EnemyManager sSingleton { get { return _sSingleton; } }
     static EnemyManager _sSingleton;
 
+    // The enemy data.
+    [Header("Data")]
+    [SerializeField] EnemyScriptableObject m_EnemyData;
+
     #region Enemy
     [Header("Enemy")]
     public int enemy1StartHealth = 3;
-    public int startEnemy = 4;
-    public int maxIncPerRound = 3;
-    public float respawnCD = 1.5f;
-    [SerializeField] float m_MinusRespawnCD = 0.1f;
+    [SerializeField] int m_StartEnemy = 4;
+    [SerializeField] int m_MaxIncPerRound = 2;
+    [SerializeField] float m_RespawnCD = 1.5f;
+    [SerializeField] float m_CDReducePerRound = 0.1f;
     #endregion
 
-    public EnemyScriptableObject m_EnemyData;
-
+    // To display the current spawned enemies and the maximum enemies for current round.
     [ReadOnly][SerializeField] int m_CurrEnemy, m_CurrRoundMaxEnemy;
 
+    // Instantiated enemies.
     List<Transform> mEnemyist = new List<Transform>();
     int mEnemyIndex;
 
+    // To count the time to respawn killed enemy.
     float mRespawnTimer;
 
+    // The size of enemy to create the in-game boundaries.
     Vector3 mEnemySize;
-    PlayerController.Border mBorder = new PlayerController.Border();
+    GameManager.Border mBorder = new GameManager.Border();
 
     void Awake()
     {
@@ -48,18 +54,18 @@ public class EnemyManager : MonoBehaviour
         mBorder.bottom = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).y + (mEnemySize.y / 2);
 
         CacheEnemy();
-        m_CurrRoundMaxEnemy = startEnemy;
-        //SetEnemy();
+        m_CurrRoundMaxEnemy = m_StartEnemy;
     }
 
     void Update()
     {
         if (!GameManager.sSingleton.IsBattle()) return;
 
+        // Respawn enemy when current enemy is lower than the max amount.
         if (m_CurrEnemy < m_CurrRoundMaxEnemy)
         {
             mRespawnTimer += Time.deltaTime;
-            if (mRespawnTimer >= respawnCD)
+            if (mRespawnTimer >= m_RespawnCD)
             {
                 SpawnEnemy();
                 mRespawnTimer = 0;
@@ -74,9 +80,9 @@ public class EnemyManager : MonoBehaviour
     public void NextRound()
     {
         m_CurrEnemy = 0;
-        m_CurrRoundMaxEnemy = startEnemy + (GameManager.sSingleton.currRound - 1) * maxIncPerRound;
+        m_CurrRoundMaxEnemy = m_StartEnemy + (GameManager.sSingleton.currRound - 1) * m_MaxIncPerRound;
         GameManager.sSingleton.currRound++;
-        SetEnemy();
+        SetEnemyForTheRound();
     }
 
     public void DisableAllEnemies()
@@ -113,24 +119,24 @@ public class EnemyManager : MonoBehaviour
     }
 
     public void ReduceSpawnCD()
-    { 
-        respawnCD -= m_MinusRespawnCD;
-        if (respawnCD < 0) respawnCD = 0;
+    {
+        m_RespawnCD -= m_CDReducePerRound;
+        if (m_RespawnCD < 0) m_RespawnCD = 0;
     }
 
     // ----------------------------------------------------------------------------------------------
-    // ------------------------------------------- GETTER -------------------------------------------
+    // --------------------------------------- GETTER -----------------------------------------------
     // ----------------------------------------------------------------------------------------------
 
-    public PlayerController.Border GetBorder { get { return mBorder; } }
+    public GameManager.Border GetBorder { get { return mBorder; } }
     public Vector3 GetEnemySize { get { return mEnemySize; } }
 
     /// ---------------------------------------------------------------------------------------------
-    ///-------------------------------------- PRIVATE FUNCTIONS -------------------------------------
+    ///----------------------------------- PRIVATE FUNCTIONS ----------------------------------------
     /// ---------------------------------------------------------------------------------------------
 
     // Set the enemy at the start of round.
-    void SetEnemy()
+    void SetEnemyForTheRound()
     {
         for (int i = 0; i < m_CurrRoundMaxEnemy; i++)
         {
@@ -147,6 +153,7 @@ public class EnemyManager : MonoBehaviour
         trans.gameObject.SetActive(true);
     }
 
+    // Get inactive enemy from the List.
     Transform GetEnemy()
     {
         int total = mEnemyist.Count - 1;
@@ -179,7 +186,7 @@ public class EnemyManager : MonoBehaviour
             {
                 Transform trans = Instantiate(currEnemy.prefab, Vector3.zero, Quaternion.identity);
                 trans.SetParent(parent.transform);
-                trans.GetComponent<Enemy>().enemyIndex = j;
+                trans.GetComponent<Enemy>().enemyID = j;
                 trans.gameObject.SetActive(false);
 
                 mEnemyist.Add(trans);

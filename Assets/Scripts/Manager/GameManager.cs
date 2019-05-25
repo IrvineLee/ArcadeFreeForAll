@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     #region Scene
     [Header("Scene")]
     public Transform startPosTrans;
-    public PlayerController m_PlayerController;
+    public PlayerController playerController;
     #endregion
 
     public enum State
@@ -42,13 +42,32 @@ public class GameManager : MonoBehaviour
         HISCORE,
         GAME_OVER
     }
-
+    
     #region Scene
     [Header("Current")]
     public State currState = State.BATTLE;
     public int currRound = 1;
     public int coinToScore = 1000;
     #endregion
+
+    public class Border
+    {
+        public float top, bottom, left, right;
+
+        public Border()
+        {
+            this.top = 0;
+            this.bottom = 0;
+            this.left = 0;
+            this.right = 0;
+        }
+
+        public bool IsZero()
+        {
+            if (top == 0 && bottom == 0 && left == 0 && right == 0) return true;
+            return false;
+        }
+    }
 
     void Awake()
     {

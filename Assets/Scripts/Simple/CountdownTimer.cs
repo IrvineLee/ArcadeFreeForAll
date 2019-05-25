@@ -12,8 +12,11 @@ public class CountdownTimer : MonoBehaviour
 
     void Start()
     {
+        // Set the round time.
         startTime = GameManager.sSingleton.roundTime;
         mTimer = startTime;
+
+        // Set the reference.
         mSecondText = transform.GetChild(0).GetComponent<Text>();
         mDotText = transform.GetChild(1).GetComponent<Text>();
         mMilliSecondText = transform.GetChild(2).GetComponent<Text>();
@@ -23,6 +26,7 @@ public class CountdownTimer : MonoBehaviour
     {
         if (!GameManager.sSingleton.IsBattle()) return;
 
+        // Count the time.
         if (mTimer != 0)
         {
             mTimer -= Time.deltaTime;
@@ -36,14 +40,16 @@ public class CountdownTimer : MonoBehaviour
         }
     }
 
+    // Start the timer.
     public void Initialize()
     {
         mTimer = startTime;
         UpdateColor(Color.white);
         UpdateTimer(mTimer);
         gameObject.SetActive(true);
-    }  
+    }
 
+    // Display the seconds and millisecond accordingly.
     void UpdateTimer(float duration)
     {
         float seconds = (int)duration;
@@ -61,6 +67,7 @@ public class CountdownTimer : MonoBehaviour
         if (seconds <= 10) UpdateColor(Color.red);
     }
 
+    // Change the timer color.
     void UpdateColor(Color color)
     {
         mSecondText.color = color;

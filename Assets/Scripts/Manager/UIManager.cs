@@ -45,7 +45,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button m_EndButton;
     #endregion
 
-    Image mShield;
     int mHighScoreRank;
     PlayerController mPlayerController;
 
@@ -58,7 +57,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         UI_Initialize();
-        mPlayerController = GameManager.sSingleton.m_PlayerController;
+        mPlayerController = GameManager.sSingleton.playerController;
     }
 
     void Update()
@@ -74,17 +73,17 @@ public class UIManager : MonoBehaviour
     /// ------------------------------------------------------------------------------------
     
     // Update the life and rockets UI.
-    public void UpdateLife(int toVal) { UpdateImageUI(ref m_LifeParent, toVal); }
+    public void UpdateLife(int toVal)    { UpdateImageUI(ref m_LifeParent, toVal); }
     public void UpdateRockets(int toVal) { UpdateImageUI(ref m_RocketParent, toVal); }
 
     // Update the health and shield UI.
-    public void UpdateHealth(int toVal) { UpdateBarUI(ref m_HealthParent, toVal); }
-    public void UpdateShield(int toVal) { UpdateBarUI(ref m_ShieldParent, toVal); }
+    public void UpdateHealth(int toVal)  { UpdateBarUI(ref m_HealthParent, toVal); }
+    public void UpdateShield(int toVal)  { UpdateBarUI(ref m_ShieldParent, toVal); }
 
     // Update score UI.
-    public void UpdateScore(int toVal) { m_CurrScoreText.text = toVal.ToString(); }
-    public void UpdateCoins(int toVal) { m_CurrCoinText.text = toVal.ToString(); }
-    public void UpdateKills(int toVal) { m_CurrKillText.text = toVal.ToString(); }
+    public void UpdateScore(int toVal)   { m_CurrScoreText.text = toVal.ToString(); }
+    public void UpdateCoins(int toVal)   { m_CurrCoinText.text = toVal.ToString(); }
+    public void UpdateKills(int toVal)   { m_CurrKillText.text = toVal.ToString(); }
 
     // Pause and unpause menu. Public for button event press.
     public void PauseUnPauseMenu()
@@ -160,6 +159,7 @@ public class UIManager : MonoBehaviour
     /// -------------------------------- PRIVATE FUNCTIONS ---------------------------------
     /// ------------------------------------------------------------------------------------
 
+    // Enable the child gameobject (which has an image on them).
     void UpdateImageUI(ref Transform trans, int toVal)
     {
         for (int i = 0; i < trans.childCount; i++)
@@ -170,6 +170,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // Fill the bar according to the value (0 ~ 1).
     void UpdateBarUI(ref Transform trans, int toVal)
     {
         for (int i = 0; i < trans.childCount; i++)

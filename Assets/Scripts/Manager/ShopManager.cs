@@ -10,11 +10,11 @@ public class ShopManager : MonoBehaviour
 
     #region Price
     [Header("Price")]
-    public int lifePrice = 100;
-    public int rechargeRocketPrice = 50;
-    public int addRocketsPrice = 50;
-    public int upgrShieldPrice = 30;
-    public int upgrRechargeRatePrice = 30;
+    [SerializeField] int m_LifePrice = 50;
+    [SerializeField] int m_RechargeRocketPrice = 25;
+    [SerializeField] int m_AddRocketsPrice = 25;
+    [SerializeField] int m_UpgrShieldPrice = 15;
+    [SerializeField] int m_UpgrRechargeRatePrice = 15;
     #endregion
 
     #region Button
@@ -42,13 +42,14 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
-        mPlayerController = GameManager.sSingleton.m_PlayerController;
+        mPlayerController = GameManager.sSingleton.playerController;
 
-        SetPrice(ref m_AddLifeBtn, lifePrice.ToString());
-        SetPrice(ref m_RechargeRocketsBtn, rechargeRocketPrice.ToString());
-        SetPrice(ref m_AddMaxRocketsBtn, addRocketsPrice.ToString());
-        SetPrice(ref m_UpgrShieldBtn, upgrShieldPrice.ToString());
-        SetPrice(ref m_UpgrShieldRechargeBtn, upgrRechargeRatePrice.ToString());
+        // Set the price for the UI to display correctly.
+        SetPrice(ref m_AddLifeBtn, m_LifePrice.ToString());
+        SetPrice(ref m_RechargeRocketsBtn, m_RechargeRocketPrice.ToString());
+        SetPrice(ref m_AddMaxRocketsBtn, m_AddRocketsPrice.ToString());
+        SetPrice(ref m_UpgrShieldBtn, m_UpgrShieldPrice.ToString());
+        SetPrice(ref m_UpgrShieldRechargeBtn, m_UpgrRechargeRatePrice.ToString());
     }
 
     /// ---------------------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ public class ShopManager : MonoBehaviour
 
     public void AddLife()
     {
-        if (!IsSufficient(lifePrice)) return;
+        if (!IsSufficient(m_LifePrice)) return;
 
         mPlayerController.AddLife();
         m_AddLifeBtn.interactable = false;
@@ -78,7 +79,7 @@ public class ShopManager : MonoBehaviour
 
     public void RechargeRockets()
     {
-        if (!IsSufficient(rechargeRocketPrice)) return;
+        if (!IsSufficient(m_RechargeRocketPrice)) return;
 
         mPlayerController.RechargeRockets();
         if (mPlayerController.IsRocketsFull) m_RechargeRocketsBtn.interactable = false;
@@ -86,7 +87,7 @@ public class ShopManager : MonoBehaviour
 
     public void AddMaxRockets()
     {
-        if (!IsSufficient(addRocketsPrice)) return;
+        if (!IsSufficient(m_AddRocketsPrice)) return;
         mPlayerController.AddMaxRockets();
 
         float rockets = mPlayerController.GetMaxRockets;
@@ -95,7 +96,7 @@ public class ShopManager : MonoBehaviour
 
     public void UpgradeShield()
     {
-        if (!IsSufficient(upgrShieldPrice)) return;
+        if (!IsSufficient(m_UpgrShieldPrice)) return;
         mPlayerController.UpgradeShield();
 
         float shield = mPlayerController.GetMaxShield;
@@ -104,7 +105,7 @@ public class ShopManager : MonoBehaviour
 
     public void UpgradeShieldRechargeRate()
     {
-        if (!IsSufficient(upgrRechargeRatePrice)) return;
+        if (!IsSufficient(m_UpgrRechargeRatePrice)) return;
         mPlayerController.UpgradeShieldRechargeRate();
 
         float rechargeDur = mPlayerController.GetShieldRechargeTime;
@@ -124,15 +125,9 @@ public class ShopManager : MonoBehaviour
 
     bool IsSufficient(int price)
     {
-        if (mPlayerController.GetCoin >= price)
-        {
-            mPlayerController.RemoveCoin(price);
-            return true;
-        }
-        else
-        {
-            m_InsufficientCoins.gameObject.SetActive(true);
-            return false;
-        }
+        if (mPlayerController.GetCoin >= price) { mPlayerController.RemoveCoin(price); return true; }
+
+        m_InsufficientCoins.gameObject.SetActive(true);
+        return false; 
     }
 }

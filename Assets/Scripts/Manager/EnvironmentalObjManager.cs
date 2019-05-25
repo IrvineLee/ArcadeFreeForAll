@@ -7,8 +7,9 @@ public class EnvironmentalObjManager : MonoBehaviour
     public static EnvironmentalObjManager sSingleton { get { return _sSingleton; } }
     static EnvironmentalObjManager _sSingleton;
 
-    public EnvObjScriptableObject m_EnvObjData;
+    [SerializeField] EnvObjScriptableObject m_EnvObjData;
 
+    // Environmental object list and their indexes.
     List<Transform> mCoinList = new List<Transform>();
     List<Transform> mExplosionList = new List<Transform>();
     int mCoinIndex, mExplosionIndex;
@@ -24,6 +25,10 @@ public class EnvironmentalObjManager : MonoBehaviour
         CacheCoins();
     }
 
+    /// ---------------------------------------------------------------------------------------------
+    /// --------------------------------- PUBLIC FUNCTIONS ------------------------------------------
+    /// ---------------------------------------------------------------------------------------------
+
     public Transform GetCoin() { return GetEnvObj(ref mCoinList, ref mCoinIndex); }
     public Transform GetExplosion() { return GetEnvObj(ref mExplosionList, ref mExplosionIndex); }
 
@@ -32,6 +37,10 @@ public class EnvironmentalObjManager : MonoBehaviour
         DisableEnvObj(ref mCoinList);
         DisableEnvObj(ref mExplosionList);
     }
+
+    /// ----------------------------------------------------------------------------------------------
+    /// ---------------------------------- PRIVATE FUNCTIONS -----------------------------------------
+    /// ----------------------------------------------------------------------------------------------
 
     Transform GetEnvObj(ref List<Transform> envObjist, ref int envObjIndex)
     {
